@@ -1,5 +1,6 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { WifiOutlined  } from '@ant-design/icons';
+import DragCustomNode from '../../components/DragCustomNode/index';
 
 import ReactFlow, {
   ReactFlowProvider,
@@ -12,16 +13,12 @@ import './index.css';
 import Sidebar from '../../components/Sidebar';
 
 const initialNodes = [
-  {
-    id: '1',
-    type: 'input',
-    data: { label: <div><WifiOutlined style={{color:'#fff'}} /><span style={{height:'100%',border:'1px solid #fff'}}></span>已定义好的节点</div>},
-    position: { x: 250, y: 5 },
-    style:{ backgroundColor:'#1890ff'},
-    sourcePosition:'right'
-  },
 ];
-
+const nodeTypes = {
+  // newNode: ColorSelectorNode,
+  drag:DragCustomNode,
+}
+const initBgColor = '#333';
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
@@ -30,6 +27,7 @@ const DragFlow = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  const [bgColor,setbgColor] = useState(initBgColor)
 
   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
 
@@ -44,21 +42,48 @@ const DragFlow = () => {
 
       const reactFlowBounds =  reactFlowWrapper &&  reactFlowWrapper?.current && reactFlowWrapper?.current?.getBoundingClientRect();
       const type = event.dataTransfer.getData('application/reactflow');
-
       // check if the dropped element is valid
+      // document.body.appendChild(DragCustom)
       if (typeof type === 'undefined' || !type) {
         return;
       }
-
+      console.log('e-----------------',event);
       const position = reactFlowInstance?.project({
         x: event.clientX - reactFlowBounds.left,
         y: event.clientY - reactFlowBounds.top,
       });
+      const onChange = (event) => {
+        setNodes((nds)=>{
+          console.log(nds,'nds-----');
+          if(nds){
+            nds && nds?.map((node)=>{
+              if (node.id !== '4') {
+                return node;
+              }
+              const color =  event.target.value;
+              setbgColor(color);
+              return {
+                ...nodes,
+                data:{
+                  ...nodes.data,
+                  color,
+                }
+              };
+            })
+          }
+          const color =  event.target.value;
+          setbgColor(color);  
+          return nds;
+        });
+      };
       const newNode = {
         id: getId(),
-        type,
+        type: type,
+        // type:'input',
         position,
-        data: { label: `${type} node` },
+        data: {label:<DragCustomNode></DragCustomNode> },
+        // data: {label:'Output end'},
+        // sourcePosition:'right'
       };
 
       setNodes((nds) => nds.concat(newNode));
@@ -69,6 +94,7 @@ const DragFlow = () => {
   return (
     <div className="dndflow">
       <ReactFlowProvider>
+        <Sidebar />
         <div className="reactflow-wrapper" ref={reactFlowWrapper} style={{width:'calc(100vw - 300px)',height:'100vh'}}>
           <ReactFlow
             nodes={nodes}
@@ -79,12 +105,13 @@ const DragFlow = () => {
             onInit={setReactFlowInstance}
             onDrop={onDrop}
             onDragOver={onDragOver}
-            fitView
+            // fitView
+            // style={{ background: bgColor }}
+            nodeTypes={nodeTypes}
           >
             <Controls />
           </ReactFlow>
         </div>
-        <Sidebar />
       </ReactFlowProvider>
     </div>
   );
