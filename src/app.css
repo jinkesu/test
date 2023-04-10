@@ -28,3 +28,22 @@
 
 }
 
+
+element.style {
+    width: 10px;
+    height: 10px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(153, 153, 153);
+}
+.react-flow__handle.connectionindicator {
+    pointer-events: all;
+    cursor: crosshair;
+}
+
+/* .react-flow__handle-left{
+    position: absolute;
+    left: 7px;
+    top: 50px;
+    transform: translate(0, -50%); 
+    
+} */

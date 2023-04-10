@@ -18,8 +18,18 @@
     text-align: center;
     display: flex;
     align-items: center;
-    
   }
+
+  .dndflow .outCustom{
+    width:120px;
+    height:26px;
+    border-radius: 6px;
+    background-color: #3bff18;
+    text-align: center;
+    display: flex;
+    align-items: center;
+  }
+
 
   
   @media screen and (min-width: 768px) {

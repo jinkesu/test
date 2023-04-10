@@ -8,7 +8,6 @@ export default memo((props) => {
   return (
     <div className='dragCustom'>
       {/* <CustomHandle type="source" position={Position.Right}  /> */}
-      
       {/* <WifiOutlined style={{ color: "#fff" }} />
       <input type="text" defaultValue={"自已定义的节点"} /> */}
       <WifiOutlined style={{ color: "#fff" }} />
@@ -26,7 +25,8 @@ export default memo((props) => {
         <div className="input">
           <input type="text" defaultValue={"自已定义的节点"} />
         </div>
-        </div> */}
+        </div> 
+     */}
     </div>
   );
 });
